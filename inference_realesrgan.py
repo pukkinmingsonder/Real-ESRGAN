@@ -4,6 +4,7 @@ import glob
 import os
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
+from PIL import Image, ImageCms
 
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
@@ -159,6 +160,22 @@ def main():
                 save_path = os.path.join(args.output, f'{imgname}.{extension}')
             else:
                 save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
+
+            # Notice the COLOR_BGR2RGB which means that the color is 
+            # converted from BGR to RGB 
+            output_coverted = cv2.cvtColor(output, cv2.COLOR_BGR2RGB) 
+            pil_image = Image.fromarray(color_coverted) 
+
+            profile = ImageCms.createProfile("sRGB")
+            # im.save("out.jpg", icc_profile=ImageCms.ImageCmsProfile(profile).tobytes())
+            
+            output.save(
+                save_path,
+                dpi=(300,300),
+                icc_profile=ImageCms.ImageCmsProfile(profile).tobytes(),
+            )
+
+            
             cv2.imwrite(save_path, output)
 
 
