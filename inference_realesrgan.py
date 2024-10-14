@@ -164,7 +164,7 @@ def main():
             # Notice the COLOR_BGR2RGB which means that the color is 
             # converted from BGR to RGB 
             output_coverted = cv2.cvtColor(output, cv2.COLOR_BGR2RGB) 
-            pil_image = Image.fromarray(color_coverted) 
+            pil_image = Image.fromarray(output_coverted) 
 
             profile = ImageCms.createProfile("sRGB")
             # im.save("out.jpg", icc_profile=ImageCms.ImageCmsProfile(profile).tobytes())
