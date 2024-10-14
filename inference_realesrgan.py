@@ -169,14 +169,14 @@ def main():
             profile = ImageCms.createProfile("sRGB")
             # im.save("out.jpg", icc_profile=ImageCms.ImageCmsProfile(profile).tobytes())
             
-            output.save(
+            pil_image.save(
                 save_path,
                 dpi=(300,300),
                 icc_profile=ImageCms.ImageCmsProfile(profile).tobytes(),
             )
 
             
-            cv2.imwrite(save_path, output)
+            # cv2.imwrite(save_path, output)
 
 
 if __name__ == '__main__':
