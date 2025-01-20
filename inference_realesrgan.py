@@ -137,6 +137,7 @@ def main():
 
         img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
         if len(img.shape) == 3 and img.shape[2] == 4:
+            print(f"{imgname}: {img.shape}")
             img_mode = 'RGBA'
         else:
             img_mode = None
