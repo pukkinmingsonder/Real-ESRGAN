@@ -136,11 +136,43 @@ def main():
         print('Testing', idx, imgname)
 
         img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
+        print(f"{imgname}: {img.shape}")
         if len(img.shape) == 3 and img.shape[2] == 4:
-            print(f"{imgname}: {img.shape}")
+            
             img_mode = 'RGBA'
         else:
             img_mode = None
+
+        if img.shape[0] >= 4000 or img.shape[1] >= 4000:
+          ###
+          if args.ext == 'auto':
+              extension = extension[1:]
+          else:
+              extension = args.ext
+              
+          if img_mode == 'RGBA':  # RGBA images should be saved in png format
+              extension = 'png'
+          save_path = os.path.join(args.output, f'{imgname}.{extension}')
+          # if args.suffix == '':
+          #     save_path = os.path.join(args.output, f'{imgname}.{extension}')
+          # else:
+          #     save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
+
+          # Notice the COLOR_BGR2RGB which means that the color is 
+          # converted from BGR to RGB 
+          output_coverted = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) 
+          pil_image = Image.fromarray(output_coverted) 
+
+          profile = ImageCms.createProfile("sRGB")
+          # im.save("out.jpg", icc_profile=ImageCms.ImageCmsProfile(profile).tobytes())
+          
+          pil_image.save(
+              save_path,
+              dpi=(300,300),
+              icc_profile=ImageCms.ImageCmsProfile(profile).tobytes(),
+          )
+          continue
+          ###
 
         try:
             if args.face_enhance:
@@ -155,12 +187,14 @@ def main():
                 extension = extension[1:]
             else:
                 extension = args.ext
+
             if img_mode == 'RGBA':  # RGBA images should be saved in png format
                 extension = 'png'
-            if args.suffix == '':
-                save_path = os.path.join(args.output, f'{imgname}.{extension}')
-            else:
-                save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
+            save_path = os.path.join(args.output, f'{imgname}.{extension}')
+            # if args.suffix == '':
+            #     save_path = os.path.join(args.output, f'{imgname}.{extension}')
+            # else:
+            #     save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
 
             # Notice the COLOR_BGR2RGB which means that the color is 
             # converted from BGR to RGB 
